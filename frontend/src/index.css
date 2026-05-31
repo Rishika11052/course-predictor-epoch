@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom scrollbar to match the dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #1a0f0a; 
+}
+::-webkit-scrollbar-thumb {
+  background: #642F37; 
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C0350F; 
+}
+
+/* Base body styles */
+body {
+  font-family: 'DM Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
