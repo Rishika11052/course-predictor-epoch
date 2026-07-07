@@ -16,6 +16,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
+	"os"
 )
 
 // Secret key for JWT signing. In production, this goes in an .env file.
@@ -277,7 +278,9 @@ func GetRecommendations(c *gin.Context) {
 	jsonData, _ := json.Marshal(mlPayload)
 
 	// 3. Call Python ML Service
-	resp, err := http.Post("http://localhost:8000/recommend", "application/json", bytes.NewBuffer(jsonData))
+	mlURL := os.Getenv("ML_SERVICE_URL")
+	if mlURL == "" { mlURL = "http://localhost:8000" }
+	resp, err := http.Post(mlURL+"/recommend", "application/json", bytes.NewBuffer(jsonData))
 	
 	// 4. FALLBACK LOGIC (If Python is down or throws an error)
 	if err != nil || resp.StatusCode != http.StatusOK {
