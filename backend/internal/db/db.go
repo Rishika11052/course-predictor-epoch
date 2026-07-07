@@ -1,29 +1,39 @@
-// backend/internal/db/db.go
 package db
 
 import (
 	"database/sql"
 	"fmt"
 	"log"
-
-	_ "github.com/lib/pq" // The underscore means we import it for side-effects (loading the driver)
+	"os"
+	_ "github.com/lib/pq"
 )
 
-// DB is a global variable to hold our database connection pool
 var DB *sql.DB
 
 func InitDB() {
-	// Connection string. 
-	// NOTE: If you set a specific password for your postgres user, add it here like: user=postgres password=YOUR_PASS dbname=course_predictor_db...
-	connStr := "user=postgres password=12345678 dbname=course_predictor_db sslmode=disable"
-	
+	host     := os.Getenv("DB_HOST")
+	port     := os.Getenv("DB_PORT")
+	user     := os.Getenv("DB_USER")
+	password := os.Getenv("DB_PASSWORD")
+	dbname   := os.Getenv("DB_NAME")
+
+	if host == "" { host = "127.0.0.1" }
+	if port == "" { port = "5432" }
+	if user == "" { user = "postgres" }
+	if password == "" { password = "12345678" }
+	if dbname == "" { dbname = "course_predictor_db" }
+
+	connStr := fmt.Sprintf(
+		"host=%s port=%s user=%s password=%s dbname=%s sslmode=require",
+		host, port, user, password, dbname,
+	)
+
 	var err error
 	DB, err = sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal("Failed to open a DB connection: ", err)
 	}
 
-	// Ping verifies the connection to the database is actually alive
 	err = DB.Ping()
 	if err != nil {
 		log.Fatal("Failed to ping the database (is Postgres running?): ", err)
