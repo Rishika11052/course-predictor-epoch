@@ -17,11 +17,12 @@ rf_model = joblib.load(MODEL_PATH) if os.path.exists(MODEL_PATH) else None
 # --- DATABASE CONFIG ---
 # Use 127.0.0.1 instead of localhost to avoid 6-second DNS delays
 DB_PARAMS = {
-    "dbname": "course_predictor_db",
-    "user": "postgres",
-    "password": "12345678", 
-    "host": "127.0.0.1",
-    "port": "5432"
+    "dbname": os.getenv("DB_NAME", "course_predictor_db"),
+    "user": os.getenv("DB_USER", "postgres"),
+    "password": os.getenv("DB_PASSWORD", "12345678"), 
+    "host": os.getenv("DB_HOST", "127.0.0.1"),
+    "port": os.getenv("DB_PORT", "5432"),
+    "sslmode": "require"
 }
 
 def get_db_connection():
